@@ -6,13 +6,12 @@
 /*   By: lanton-m <lanton-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:59:05 by lanton-m          #+#    #+#             */
-/*   Updated: 2025/09/20 15:59:07 by lanton-m         ###   ########.fr       */
+/*   Updated: 2025/09/21 10:34:31 by lanton-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-// Function to draws the game map on screen in the correct position
 int	ft_map_draw(t_game_instance *game_init)
 {
 	int	row;
@@ -51,7 +50,6 @@ void	ft_map_continues(t_game_instance *game_init, int column, int row)
 	return ;
 }
 
-// Function to sets the image the corresponding cell on the game board
 void	ft_set(t_game_instance *game_init, void *img, int wid, int hgt)
 {
 	mlx_put_image_to_window(game_init->mlx_ptr, game_init->win_ptr,

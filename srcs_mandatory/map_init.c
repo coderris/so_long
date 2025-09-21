@@ -6,13 +6,12 @@
 /*   By: lanton-m <lanton-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 16:00:08 by lanton-m          #+#    #+#             */
-/*   Updated: 2025/09/20 20:50:01 by lanton-m         ###   ########.fr       */
+/*   Updated: 2025/09/21 10:36:24 by lanton-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-// Function to open and read the map file
 int	ft_open_map(char *map, t_game_instance *game_init)
 {
 	int			fd;
@@ -35,8 +34,6 @@ int	ft_open_map(char *map, t_game_instance *game_init)
 	return (1);
 }
 
-// Function to count the map content for ft_calloc
-// (reserved space to ft_read_map() function)
 int	ft_read_count_map(char *map)
 {
 	int	fd;
@@ -79,8 +76,6 @@ int	ft_count_lines(int fd)
 	return (count);
 }
 
-// Function to reads a map from a file, validates it, and sets
-//		it in the game instance
 int	ft_read_map(int fd, t_game_instance *game_init)
 {
 	int		i;

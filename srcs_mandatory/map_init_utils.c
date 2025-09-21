@@ -6,14 +6,12 @@
 /*   By: lanton-m <lanton-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:59:55 by lanton-m          #+#    #+#             */
-/*   Updated: 2025/09/20 15:59:57 by lanton-m         ###   ########.fr       */
+/*   Updated: 2025/09/21 10:36:08 by lanton-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-// Function to calculate the dimensions of the game map by counting
-//		the number of rows, columns and matrice
 int	ft_map_dimensions(t_game_instance *game_init)
 {
 	game_init->map_init.cols_matrice = get_cols_count(&game_init->map_init);
@@ -65,7 +63,6 @@ int	get_rows_count(t_game_instance *game_init)
 	return (1);
 }
 
-// Function to checks if the map has a valid .ber extension and path/
 int	ft_map_extension(char *map)
 {
 	char		*extension;

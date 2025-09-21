@@ -6,13 +6,12 @@
 /*   By: lanton-m <lanton-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:59:28 by lanton-m          #+#    #+#             */
-/*   Updated: 2025/09/20 15:59:30 by lanton-m         ###   ########.fr       */
+/*   Updated: 2025/09/21 10:35:13 by lanton-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-// Function to check an event handler for keyboard input during the game
 int	ft_check_keyboard(int key, t_game_instance *game_init)
 {
 	ft_non_special(key, game_init);
@@ -39,7 +38,6 @@ int	ft_check_keyboard(int key, t_game_instance *game_init)
 	return (0);
 }
 
-// Just a to be continue for keyboard 
 int	ft_non_special(int key, t_game_instance *game_init)
 {
 	if (key == ESC)
@@ -47,12 +45,9 @@ int	ft_non_special(int key, t_game_instance *game_init)
 		ft_printf("\nOh, is this game a little hard for you? :c\n");
 		ft_exit_program(game_init);
 	}
-	else if (key == RESTART)
-		ft_reset_game(game_init);
 	return (0);
 }
 
-// Auxiliary Function  : ft_events_pressed
 void	ft_win(t_game_instance *game_init)
 {
 	game_init->map_init.matrice[game_init->positions_init.player_row]

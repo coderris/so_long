@@ -6,13 +6,12 @@
 /*   By: lanton-m <lanton-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:59:10 by lanton-m          #+#    #+#             */
-/*   Updated: 2025/09/20 20:35:09 by lanton-m         ###   ########.fr       */
+/*   Updated: 2025/09/21 10:34:39 by lanton-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/so_long.h"
 
-// Function to returns feedback for errors the init of the game
 void	ft_error_init(int n)
 {
 	if (n == 38)
@@ -24,7 +23,6 @@ void	ft_error_init(int n)
 	exit(n);
 }
 
-// Function to returns feedback for errors that are related to the map
 void	ft_error_map(int n)
 {
 	if (n == 12)
