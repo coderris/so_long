@@ -6,7 +6,7 @@
 /*   By: lanton-m <lanton-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:59:42 by lanton-m          #+#    #+#             */
-/*   Updated: 2025/09/21 10:35:44 by lanton-m         ###   ########.fr       */
+/*   Updated: 2025/09/21 20:07:55 by lanton-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	ft_check_img(t_game_instance *game_init, void **image, char *path)
 
 	*image = mlx_xpm_file_to_image(game_init->mlx_ptr, path, &width, &height);
 	if (*image == NULL)
-	{	
+	{
 		ft_error_init(1);
 		ft_exit_program(game_init);
 	}

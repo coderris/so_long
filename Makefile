@@ -1,11 +1,9 @@
 # The name of the executable
 NAME = so_long
 
-
-
 # Compilation flags
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -Wall -Wextra -Werror
 # Linker flags : 'libft', 'mlx' and 'mlx' for Linux, 'lib' for X Window System, 'xext' for a single extension, and 'lm' for the math library
 LFLAGS = -lft -lmlx -lmlx_Linux -lX11 -lXext -lm
 

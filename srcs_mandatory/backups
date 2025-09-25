@@ -1,0 +1,363 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_resoluble.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lanton-m <lanton-m@student.42malaga.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/21 20:28:35 by lanton-m          #+#    #+#             */
+/*   Updated: 2025/09/21 20:28:35 by lanton-m         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../include/so_long.h"
+
+static void	flood_fill(char **mat, int rows, int cols,
+						int x, int y, int *collectibles, int *exit_found)
+{
+	if (x < 0 || y < 0 || x >= rows || y >= cols)
+		return ;
+	if (mat[x][y] == '1' || mat[x][y] == 'V')
+		return ;
+	if (mat[x][y] == 'E')
+	{
+		*exit_found = 1;
+		return ;
+	}
+	if (mat[x][y] == 'C')
+		(*collectibles)--;
+	mat[x][y] = 'V';
+	flood_fill(mat, rows, cols, x + 1, y, collectibles, exit_found);
+	flood_fill(mat, rows, cols, x - 1, y, collectibles, exit_found);
+	flood_fill(mat, rows, cols, x, y + 1, collectibles, exit_found);
+	flood_fill(mat, rows, cols, x, y - 1, collectibles, exit_found);
+}
+
+static char	**copy_map(char **src, int rows)
+{
+	char	**dst;
+	int		i;
+	int		j;
+	int		row_len;
+
+	dst = (char **)malloc(sizeof(char *) * (rows + 1));
+	if (!dst)
+		return (NULL);
+	i = 0;
+	while (i < rows)
+	{
+		row_len = 0;
+		j = 0;
+		while (src[i][j] && src[i][j] != '\n')
+		{
+			row_len++;
+			j++;
+		}
+		dst[i] = (char *)malloc((row_len + 1) * sizeof(char));
+		if (!dst[i])
+		{
+			while (--i >= 0)
+				free(dst[i]);
+			free(dst);
+			return (NULL);
+		}
+		j = 0;
+		while (j < row_len)
+		{
+			dst[i][j] = src[i][j];
+			j++;
+		}
+		dst[i][row_len] = '\0';
+		i++;
+	}
+	dst[rows] = NULL;
+	return (dst);
+}
+
+static void	free_map_copy(char **mat, int rows)
+{
+	int	i;
+
+	i = 0;
+	while (i < rows)
+	{
+		free(mat[i]);
+		i++;
+	}
+	free(mat);
+}
+
+static int	find_player(char **mat, int rows, int cols, int *x, int *y)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < rows)
+	{
+		j = 0;
+		while (j < cols)
+		{
+			if (mat[i][j] == 'P')
+			{
+				*x = i;
+				*y = j;
+				return (1);
+			}
+			j++;
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	ft_is_map_resoluble(t_game_instance *game_init)
+{
+	int		x;
+	int		y;
+	int		exit_found;
+	int		collectibles;
+	int		i;
+	int		j;
+	char	**mat_copy;
+
+	x = 0;
+	y = 0;
+	exit_found = 0;
+	collectibles = 0;
+	if (!game_init || !game_init->map_init.matrice)
+		return (0);
+	i = 0;
+	while (i < game_init->map_init.rows_matrice)
+	{
+		j = 0;
+		while (j < game_init->map_init.cols_matrice)
+		{
+			if (game_init->map_init.matrice[i][j] == 'C')
+				collectibles++;
+			j++;
+		}
+		i++;
+	}
+	mat_copy = copy_map(game_init->map_init.matrice,
+			game_init->map_init.rows_matrice);
+	if (!mat_copy)
+		return (0);
+	if (!find_player(mat_copy, game_init->map_init.rows_matrice,
+			game_init->map_init.cols_matrice, &x, &y))
+	{
+		free_map_copy(mat_copy, game_init->map_init.rows_matrice);
+		return (0);
+	}
+	flood_fill(mat_copy, game_init->map_init.rows_matrice,
+		game_init->map_init.cols_matrice, x, y,
+		&collectibles, &exit_found);
+	free_map_copy(mat_copy, game_init->map_init.rows_matrice);
+	return (collectibles == 0 && exit_found);
+}
+
+
+/* ************************************************************************** */
+/*                                                                            */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   so_long.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lanton-m <lanton-m@student.42malaga.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 15:55:08 by lanton-m          #+#    #+#             */
+/*   Updated: 2025/09/21 23:26:03 by lanton-m         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef SO_LONG_H
+# define SO_LONG_H
+
+# include "../libs/mlx/mlx.h"
+# include "../libs/libft/includes/libft.h"
+# include "custom_letters.h"
+# include <fcntl.h>
+# include <string.h>
+
+# define PLAYER 'P'
+# define EXIT 'E'
+# define COLLECTIBLE 'C'
+# define WALL '1'
+# define EMPTY '0'
+
+# define ESC 65307
+# define W 119
+# define UP 65362
+# define A 97
+# define LEFT 65361
+# define S 115
+# define DOWN 65364
+# define D 100
+# define RIGHT 65363
+
+# define MAX_FILES 1
+
+# define TRUE 1
+# define FALSE 0
+
+# define CELL_SIZE 32
+
+typedef struct s_game_objs
+{
+	void	*player;
+	void	*player_left;
+	void	*player_right;
+	void	*player_down;
+	void	*player_up;
+	void	*collectible;
+	void	*exit_open;
+	void	*exit_close;
+	void	*wall;
+	void	*floor;
+	int		img_width;
+	int		img_height;
+}	t_game_objs;
+
+typedef struct s_game_positions
+{
+	int	player_row;
+	int	player_col;
+	int	exit_row;
+	int	exit_col;
+}	t_game_positions;
+
+typedef struct s_game_data
+{
+	int	count_player;
+	int	count_exit;
+	int	count_collectible;
+	int	count_wall;
+	int	count_empty;
+	int	count_movements;
+	int	endgame;
+}	t_game_data;
+
+typedef struct s_game_resolutions
+{
+	int		settings_map_width;
+	int		settings_map_height;
+	char	*settings_name_window;
+	char	*settings_name_map;
+}	t_game_resolutions;
+
+typedef struct s_map_data
+{
+	int					first_read_matrice;
+	int					cols_matrice;
+	int					rows_matrice;
+	int					size_matrice;
+	char				**matrice;
+	t_game_resolutions	resolutions;
+	t_game_positions	positions;
+}	t_map_data;
+
+typedef struct s_game_instance
+{
+	void				*mlx_ptr;
+	void				*win_ptr;
+	int					argc_tmp;
+	char				**argv_tmp;
+	t_map_data			map_init;
+	t_game_positions	positions_init;
+	t_game_data			game_data;
+	t_game_resolutions	resolutions_init;
+	t_game_objs			game_objs;
+}	t_game_instance;
+
+int		main(int argc, char **argv);
+void	ft_struct_init(t_game_instance *game_init);
+void	ft_initialize_game(t_game_instance *game_init);
+int		ft_check_keyboard(int key, t_game_instance *game_init);
+int		ft_non_special(int key, t_game_instance *game_init);
+int		ft_exit_program(t_game_instance *game_init);
+int		ft_open_map(char *map, t_game_instance *game_init);
+int		ft_read_count_map(char *map);
+int		ft_count_lines(int fd);
+int		ft_map_dimensions(t_game_instance *game_init);
+int		get_rows_count(t_game_instance *game_init);
+int		get_cols_count(t_map_data *map_init);
+int		ft_read_map(int fd, t_game_instance *game_init);
+int		ft_check_read(t_game_instance *game_init);
+int		ft_map_extension(char *map);
+int		ft_is_valid_map(t_game_instance *game_init);
+int		ft_is_map_shape_valid(t_game_instance *game_init);
+int		ft_is_wall(t_game_instance *game_init);
+int		ft_count_map_objects(t_game_instance *game_init);
+int		ft_have_requires(t_game_instance *game_init);
+int		ft_is_map_resoluble(t_game_instance *game_init);
+void	ft_gameplay_start(t_game_instance *game_init);
+int		ft_events_pressed(t_game_instance *game_init, int column, int row);
+void	ft_win(t_game_instance *game_init);
+int		ft_print_shell(t_game_instance *game_init);
+void	ft_reset_game(t_game_instance *game_init);
+void	ft_locate_player(t_game_instance *game_init);
+void	ft_img_init(t_game_instance *game_init);
+void	ft_check_img(t_game_instance *game_init, void **image, char *path);
+int		ft_map_draw(t_game_instance *game_init);
+void	ft_map_continues(t_game_instance *game_init, int column, int row);
+void	ft_set(t_game_instance *game_init, void *img, int wid, int hgt);
+void	ft_free_map(t_game_instance *game_init);
+void	ft_free_img(t_game_instance *game_init);
+void	ft_cleanup(t_game_instance *game_init);
+void	ft_error_init(int n);
+void	ft_error_map(int n);
+int		ft_strcmp(const char *s1, const char *s2);
+
+#endif
+
+
+
+
+
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   custom_letters.h                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lanton-m <lanton-m@student.42malaga.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 15:54:59 by lanton-m          #+#    #+#             */
+/*   Updated: 2025/09/21 19:44:57 by lanton-m         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef CUSTOM_LETTERS_H
+# define CUSTOM_LETTERS_H
+
+# include "so_long.h"
+
+# define COLOR_DEFAULT "\033[0;39m"
+# define COLOR_BLACK "\033[0;30m"
+# define COLOR_RED "\033[0;31m"
+# define COLOR_GREEN "\033[0;32m"
+# define COLOR_YELLOW "\033[0;33m"
+# define COLOR_BLUE "\033[0;34m"
+# define COLOR_PURPLE "\033[0;35m"
+# define COLOR_CYAN "\033[0;36m"
+# define COLOR_WHITE "\033[0;37m"
+
+# define BOLD_COLOR_BLACK "\033[1;30m"
+# define BOLD_COLOR_RED "\033[1;31m"
+# define BOLD_COLOR_GREEN "\033[1;32m"
+# define BOLD_COLOR_YELLOW "\033[1;33m"
+# define BOLD_COLOR_BLUE "\033[1;34m"
+# define BOLD_COLOR_PURPLE "\033[1;35m"
+# define BOLD_COLOR_CYAN "\033[1;36m"
+# define BOLD_COLOR_WHITE "\033[1;37m"
+
+# define UNDERLINE_BLACK "\033[4;30m"
+# define UNDERLINE_RED "\033[4;31m"
+# define UNDERLINE_GREEN "\033[4;32m"
+# define UNDERLINE_YELLOW "\033[4;33m"
+# define UNDERLINE_BLUE "\033[4;34m"
+# define UNDERLINE_PURPLE "\033[4;35m"
+# define UNDERLINE_CYAN "\033[4;36m"
+# define UNDERLINE_WHITE "\033[4;37m"
+
+#endif

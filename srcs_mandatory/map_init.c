@@ -6,7 +6,7 @@
 /*   By: lanton-m <lanton-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 16:00:08 by lanton-m          #+#    #+#             */
-/*   Updated: 2025/09/21 10:36:24 by lanton-m         ###   ########.fr       */
+/*   Updated: 2025/09/21 20:08:24 by lanton-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	ft_open_map(char *map, t_game_instance *game_init)
 	game_init->map_init.first_read_matrice = ft_read_count_map(map);
 	if (!game_init->map_init.first_read_matrice
 		|| game_init->map_init.first_read_matrice < 3
-	    || !ft_read_map(fd, game_init))
+		|| !ft_read_map(fd, game_init))
 	{
 		close (fd);
 		ft_free_map(game_init);

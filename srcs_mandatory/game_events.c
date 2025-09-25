@@ -6,7 +6,7 @@
 /*   By: lanton-m <lanton-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:59:36 by lanton-m          #+#    #+#             */
-/*   Updated: 2025/09/21 10:35:33 by lanton-m         ###   ########.fr       */
+/*   Updated: 2025/09/21 13:13:43 by lanton-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,10 @@ void	ft_gameplay_start(t_game_instance *game_init)
 
 int	ft_print_shell(t_game_instance *game_init)
 {
-	static int	previous_count_movements = -1;
+	static int	previous_count_movements;
 	int			current_count_movements;
 
+	previous_count_movements = -1;
 	current_count_movements = game_init->game_data.count_movements;
 	if (current_count_movements != previous_count_movements)
 	{
