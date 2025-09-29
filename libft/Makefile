@@ -49,6 +49,7 @@ SOURCES = sources/conversions/ft_atoi.c \
 	sources/manipulate_strings/ft_strlen.c \
 	sources/manipulate_strings/ft_strmapi.c \
 	sources/manipulate_strings/ft_strncmp.c \
+	sources/manipulate_strings/ft_strcmp.c \
 	sources/manipulate_strings/ft_strnstr.c \
 	sources/manipulate_strings/ft_strrchr.c \
 	sources/manipulate_strings/ft_strtrim.c \

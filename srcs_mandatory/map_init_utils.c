@@ -6,7 +6,7 @@
 /*   By: lanton-m <lanton-m@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 15:59:55 by lanton-m          #+#    #+#             */
-/*   Updated: 2025/09/21 10:36:08 by lanton-m         ###   ########.fr       */
+/*   Updated: 2025/09/29 12:00:16 by lanton-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,18 @@ int	ft_map_dimensions(t_game_instance *game_init)
 	game_init->map_init.cols_matrice = get_cols_count(&game_init->map_init);
 	if (game_init->map_init.cols_matrice == 0)
 		return (0);
-	return (get_rows_count(game_init));
+	game_init->map_init.rows_matrice = 0;
+	while (game_init->map_init.matrice[game_init->map_init.rows_matrice])
+		game_init->map_init.rows_matrice++;
+	if (game_init->map_init.rows_matrice == 0)
+		return (0);
+	game_init->map_init.size_matrice = game_init->map_init.rows_matrice
+		* game_init->map_init.cols_matrice;
+	game_init->map_init.resolutions.settings_map_width
+		= game_init->map_init.cols_matrice;
+	game_init->map_init.resolutions.settings_map_height
+		= game_init->map_init.rows_matrice;
+	return (1);
 }
 
 int	get_cols_count(t_map_data *map_init)
@@ -25,6 +36,8 @@ int	get_cols_count(t_map_data *map_init)
 	char	*row;
 	int		cols_count;
 
+	if (!map_init || !map_init->matrice || !map_init->matrice[0])
+		return (0);
 	row = map_init->matrice[0];
 	cols_count = 0;
 	while (*row && *row != '\n')
@@ -35,57 +48,24 @@ int	get_cols_count(t_map_data *map_init)
 	return (cols_count);
 }
 
-int	get_rows_count(t_game_instance *game_init)
-{
-	int	row_index;
-	int	row_len;
-
-	row_index = 0;
-	while (game_init->map_init.matrice[row_index])
-	{
-		row_len = ft_strlen(game_init->map_init.matrice[row_index])
-			- (game_init->map_init.matrice[row_index]
-			[ft_strlen(game_init->map_init.matrice[row_index]) - 1] == '\n');
-		if (row_len != game_init->map_init.cols_matrice)
-		{
-			game_init->map_init.rows_matrice = 0;
-			return (0);
-		}
-		game_init->map_init.rows_matrice++;
-		row_index++;
-	}
-	game_init->map_init.size_matrice = game_init->map_init.rows_matrice
-		* game_init->map_init.cols_matrice;
-	game_init->map_init.resolutions.settings_map_width
-		= game_init->map_init.cols_matrice;
-	game_init->map_init.resolutions.settings_map_height
-		= game_init->map_init.rows_matrice;
-	return (1);
-}
-
 int	ft_map_extension(char *map)
 {
-	char		*extension;
-	char		*file_extension;
-	static int	file_count;
+	char	*file_extension;
+	char	*filename;
 
-	file_count = 0;
-	extension = ".ber";
-	file_extension = ft_strrchr(map, '.');
+	if (!map)
+		return (0);
 	if (map[ft_strlen(map) - 1] == '/')
-	{
-		ft_error_map(21);
 		return (0);
-	}
-	else if (!file_extension || !ft_strcmp(file_extension, ""))
-		return (0);
-	else if (file_extension && !ft_strcmp(file_extension, extension))
-	{
-		if (file_count >= MAX_FILES)
-			return (0);
-		file_count++;
-	}
+	filename = ft_strrchr(map, '/');
+	if (filename)
+		filename++;
 	else
+		filename = map;
+	if (filename[0] == '.')
 		return (0);
-	return (1);
+	file_extension = ft_strrchr(map, '.');
+	if (!file_extension)
+		return (0);
+	return (ft_strcmp(file_extension, ".ber") == 0);
 }
